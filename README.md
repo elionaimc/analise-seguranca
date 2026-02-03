@@ -13,7 +13,7 @@ Implementada em Node.js e TypeScript, o script processa dados de **vulnerabilida
 ## Como Instalar e Rodar
 
 ### 1. Pré-requisitos
-Certifique-se de ter o [Node.js](https://nodejs.org) instalado (versão 18 ou superior).
+Certifique-se de ter o Node.js instalado (versão 18 ou superior).
 
 ### 2. Preparação do Ambiente
 Abra o terminal na pasta do projeto e execute:
@@ -34,7 +34,7 @@ ANALYSIS_YEAR="2025"
 ```
 
 ### 4. Execução
-Para gerar o dashboard de métricas no terminal, rode:
+Para gerar o dashboard de métricas, insira o comando abaixo terminal:
 
 ```bash
 # Executar script
@@ -93,6 +93,4 @@ Esse tipo de relatório é usado em análises reais de maturidade técnica e pri
 
 [![Linkedin Badge](https://img.shields.io/badge/-linkedin-blue?style=for-the-badge&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/elionai)](https://www.linkedin.com/in/elionai) &nbsp; &nbsp; &nbsp; [![Gmail Badge](https://img.shields.io/badge/-gmail-c14438?style=for-the-badge&logo=Gmail&logoColor=white&link=mailto:elionai@embits.digital)](mailto:elionai@embits.digital)
 
-Meu nome é Elionai Moura Cordeiro. Sou engenheiro de software senior especializado em desenvolvimento frontend e arquitetura de aplicações web, com vasta experiência na construção e manutenção de sistemas de grande escala. Sólida experiência em Angular (v10+), TypeScript, RxJS e integrações baseadas em REST, atuando em ambientes corporativos e terceirizados.
-
-Experiência em contextos regulamentados e sensíveis à conformidade, com ênfase em confiabilidade, desempenho, manutenibilidade e entrega previsível.
+Meu nome é Elionai Moura Cordeiro. Sou engenheiro de software senior especializado em desenvolvimento frontend e arquitetura de aplicações web, com vasta experiência na construção e manutenção de sistemas de grande escala. Sólida experiência em contextos regulamentados e sensíveis à conformidade, com ênfase em confiabilidade, desempenho, manutenibilidade e entrega previsível.
