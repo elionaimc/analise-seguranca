@@ -1,6 +1,8 @@
 # Análise de Métricas de Segurança
 
-Este projeto é uma ferramenta de análise de segurança baseada em Node.js e TypeScript, desenvolvida para processar relatórios de vulnerabilidades (CSV) e extrair KPIs de maturidade, eficiência de engenharia e conformidade técnica para micro-serviços.
+Ferramenta voltada a times de engenharia, AppSec e gestores técnicos para transformar relatórios exportados (.csv) de scanners SAST, SCA e Web em indicadores objetivos de risco, eficiência e maturidade técnica para auxiliar na tomada de decisões e governança.
+
+Implementada em Node.js e TypeScript, o script processa dados de **vulnerabilidades** para extrair KPIs operacionais e de conformidade em ambientes de micro-serviços.
 
 ![Dados de Exemplo](exemplo-dados.png)
 
@@ -31,8 +33,25 @@ ANALYSIS_YEAR="2025"
 Para gerar o dashboard de métricas no terminal, rode:
 
 ```bash
-# Instalar dependências
+# Executar script
 npx tsx metrics.ts
+```
+
+## Estrutura mínima do .CSV
+
+```bash
+# colunas obrigatórias para funcionar
+interface VulnerabilityRow {
+  'Vulnerability ID': string;
+  'Name': string;
+  'Asset Name': string;
+  'Severity': string;
+  'Status': string;
+  'Created at': string;
+  'Updated_at': string;
+  'Last Status Change Date': string; 
+  'Type': string;
+}
 ```
 
 ## Entendendo as Métricas
