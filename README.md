@@ -1,6 +1,8 @@
-# Security Metrics Analyzer
+# Análise de Métricas de Segurança
 
 Este projeto é uma ferramenta de análise de segurança baseada em Node.js e TypeScript, desenvolvida para processar relatórios de vulnerabilidades (CSV) e extrair KPIs de maturidade, eficiência de engenharia e conformidade técnica para micro-serviços.
+
+![Dados de Exemplo](exemplo-dados.png)
 
 ## 🚀 Como Instalar e Rodar
 

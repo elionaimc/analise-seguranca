@@ -1,18 +1,8 @@
 import * as fs from 'fs';
 import csv from 'csv-parser';
-import 'dotenv/config'; // Inicializa o dotenv
+import 'dotenv/config';
 
-// Constantes de Estilo
-const RESET = '\x1b[0m';
-const BOLD = '\x1b[1m';
-const CYAN = '\x1b[36m';
-
-// Puxando variáveis do .env
-const CSV_PATH = process.env.CSV_FILE_NAME || 'vulnerabilidades.csv';
-const LEGACY_LIST = process.env.LEGACY_ASSETS?.split(',') || [];
-const NEW_LIST = process.env.NEW_ASSETS?.split(',') || [];
-const YEAR = process.env.ANALYSIS_YEAR || '2025'; // Mantido para referência no título
-
+// estrutura mínima do .csv (colunas)
 interface VulnerabilityRow {
   'Vulnerability ID': string;
   'Name': string;
@@ -25,10 +15,22 @@ interface VulnerabilityRow {
   'Type': string;
 }
 
+// cores para visualização
+const RESET = '\x1b[0m';
+const BOLD = '\x1b[1m';
+const CYAN = '\x1b[36m';
+const YELLOW = '\x1b[33m';
+
+// Variáveis do .env
+const CSV_PATH = process.env.CSV_FILE_NAME || 'vulnerabilidades.csv';
+const LEGACY_LIST = process.env.LEGACY_ASSETS?.split(',') || [];
+const NEW_LIST = process.env.NEW_ASSETS?.split(',') || [];
+const YEAR = process.env.ANALYSIS_YEAR || '2025';
+
 const results: VulnerabilityRow[] = [];
 
 if (!fs.existsSync(CSV_PATH)) {
-    console.error(`❌ Erro: Arquivo ${CSV_PATH} não encontrado. Verifique o seu .env`);
+    console.error(`Erro: Arquivo ${CSV_PATH} não encontrado. Verifique o seu .env`);
     process.exit(1);
 }
 
@@ -36,19 +38,26 @@ fs.createReadStream(CSV_PATH)
   .pipe(csv())
   .on('data', (data) => results.push(data))
   .on('end', () => {
-    // FILTRO PRINCIPAL: Remove apenas Falsos Positivos e garante que olhamos MFEs.
-    // REMOVIDO FILTRO DE ANO e Status === 'fix_accepted' do bloco principal.
+
+    // remove falsos positivos
+    const targetAssets = [...LEGACY_LIST, ...NEW_LIST];
+    
     const activeData = results.filter(v => 
-        v['Asset Name']?.toLowerCase().includes('mfe') && 
+        targetAssets.includes(v['Asset Name']) && 
         v.Status !== 'false_positive'
     );
-      
+
+    if (activeData.length === 0) {
+        console.warn(`${YELLOW}⚠️ Aviso: Nenhum dado encontrado para os ativos listados no .env.${RESET}`);
+    }
+
     runSecurityDashboard(activeData);
   });
 
 function calculateDiffDays(startStr: string, endStr: string): number {
     const start = new Date(startStr);
     const end = new Date(endStr);
+
     if (isNaN(start.getTime()) || isNaN(end.getTime())) return 0;
     return (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24);
 }
@@ -63,17 +72,13 @@ function runSecurityDashboard(data: VulnerabilityRow[]) {
     generateSegmentedMetrics(data); // Esta função agora aceita todos os dados ativos
 }
 
-
-// Implementação das funções (MTTR, Densidade, Segmentado) de forma isolada, sem filtros internos duplicados.
-
-
 function calculateMTTR(data: VulnerabilityRow[]) {
-  // Apenas considera itens que JÁ FORAM FECHADOS para medir o tempo médio
+  // Apenas considera itens que JÁ FORAM FECHADOS
   const closedVulnerabilities = data.filter(v => v.Status === 'fix_accepted');
 
-  // ... (lógica de cálculo MTTR permanece a mesma)
   let totalDays = 0;
   let count = 0;
+
   closedVulnerabilities.forEach(v => {
     const endStr = v['Last Status Change Date'] || v['Updated_at'];
     const startStr = v['Created at'];
@@ -86,7 +91,6 @@ function calculateMTTR(data: VulnerabilityRow[]) {
   console.log(`Itens Analisados: ${count}`);
   console.log(`MTTR Geral      : ${BOLD}${(totalDays / count).toFixed(2)} dias${RESET}`);
 }
-
 
 function calculateDefectDensity(data: VulnerabilityRow[]) {
   const densityMap = data.reduce((acc, curr) => {
@@ -107,18 +111,17 @@ function calculateDefectDensity(data: VulnerabilityRow[]) {
     }))
     .sort((a, b) => b['Total Ativas'] - a['Total Ativas']);
 
-  console.log(`${BOLD}🏗️  Pipeline de resolução por projeto${RESET}`);
+  console.log(`${BOLD}Pipeline de resolução por projeto${RESET}`);
   console.table(tableData);
 
   if (tableData.length > 0) {
     const top = tableData[0];
-    console.log(`\n💡 ${BOLD}O ativo "${top['Ativo']}" concentra o maior risco com ${top['Total Ativas']} vulnerabilidades, das quais ${top['Em Aberto (Identified)']} ainda aguardam início de ação.`);
+    console.log(`\n${BOLD}O ativo "${top['Ativo']}" concentra o maior risco com ${top['Total Ativas']} vulnerabilidades, das quais ${top['Em Aberto (Identified)']} ainda aguardam início de ação.`);
   }
 }
 
-
 function generateSegmentedMetrics(data: VulnerabilityRow[]) {
-    // Para esta tabela, filtramos apenas os que já foram resolvidos para calcular o tempo
+    // Para esta tabela, filtramos apenas os que já foram resolvidos
     const resolvedData = data.filter(v => v.Status === 'fix_accepted' || v.Status === 'awaiting_validation');
     const assetsFound = [...LEGACY_LIST, ...NEW_LIST].filter(asset => data.some(v => v['Asset Name'] === asset));
 
@@ -145,10 +148,9 @@ function generateSegmentedMetrics(data: VulnerabilityRow[]) {
         };
     });
 
-    console.log(`${BOLD}📊 MTTR por Severidade e Categoria${RESET}`);
+    console.log(`${BOLD}MTTR por Severidade e Categoria${RESET}`);
     console.table(severityTable);
 
-    // --- 2. UPDATE DE DEPENDÊNCIAS (SCA) POR ATIVO ---
     const scaTable = assetsFound.map(asset => {
         const scaSubset = resolvedData.filter(v => v['Asset Name'] === asset && v.Type === 'SCAFinding');
         const totalDays = scaSubset.reduce((acc, v) => acc + calculateDiffDays(v['Created at'], v['Last Status Change Date']), 0);
@@ -160,6 +162,6 @@ function generateSegmentedMetrics(data: VulnerabilityRow[]) {
         };
     });
 
-    console.log(`\n${BOLD}📦 Ciclo de Vida de Dependências (SCA) por Ativo${RESET}`);
+    console.log(`\n${BOLD}Ciclo de Vida de Dependências (SCA) por Ativo${RESET}`);
     console.table(scaTable);
 }
