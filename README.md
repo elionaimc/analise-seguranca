@@ -1,10 +1,14 @@
 # Análise de Métricas de Segurança
 
+![image](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white) &nbsp; &nbsp; &nbsp; 
+![image](https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white) &nbsp; &nbsp; &nbsp; 
+![image](https://img.shields.io/badge/MIT-green?style=for-the-badge)
+
 Ferramenta voltada a times de engenharia, AppSec e gestores técnicos para transformar relatórios exportados (.csv) de scanners SAST, SCA e Web em indicadores objetivos de risco, eficiência e maturidade técnica para auxiliar na tomada de decisões e governança.
 
 Implementada em Node.js e TypeScript, o script processa dados de **vulnerabilidades** para extrair KPIs operacionais e de conformidade em ambientes de micro-serviços.
 
-![Dados de Exemplo](exemplo-dados.png)
+![Dados de Exemplo](./img/exemplo-dados.png)
 
 ## 🚀 Como Instalar e Rodar
 
@@ -19,13 +23,13 @@ Abra o terminal na pasta do projeto e execute:
 npm install
 ```
 
-### 3. Configuração do .env
+### 3. Configuração
 Crie um arquivo .env na raiz do projeto e preencha com os dados do seu ambiente:
 
 ```bash
-CSV_FILE_NAME="seu_arquivo_extraido.csv"
-LEGACY_ASSETS="proj-legado-1,outro-legado"
-NEW_ASSETS="meu-novo-service,outro-projeto-do-zero"
+CSV_FILE_NAME="sample-data/vulnerabilidades.csv"
+LEGACY_ASSETS="user-service,legacy-auth"
+NEW_ASSETS="order-service"
 ANALYSIS_YEAR="2025"
 ```
 
@@ -56,7 +60,7 @@ interface VulnerabilityRow {
 
 ## Entendendo as Métricas
 
-O script processa os dados excluindo automaticamente os Falsos Positivos para garantir que a análise reflita apenas o risco real.
+O script processa os dados excluindo automaticamente os *falsos positivos* para garantir que a análise reflita apenas o risco real.
 
 ### MTTR Geral (Mean Time To Remediation)
 
@@ -82,3 +86,5 @@ O script processa os dados excluindo automaticamente os Falsos Positivos para ga
 
 - Foco: Atualização de bibliotecas vulneráveis (ex: npm packages).
 - Importância: Essencial para auditorias de conformidade (Compliance). Mostra quão rápido a empresa responde a vulnerabilidades de terceiros (Supply Chain Security).
+
+Esse tipo de relatório é usado em análises reais de maturidade técnica e priorização de risco. Se isso te ajudou a entender melhor seus relatórios de segurança, o projeto cumpriu seu papel.

@@ -1,0 +1,5 @@
+Vulnerability ID,Name,Asset Name,Severity,Status,Created at,Updated_at,Last Status Change Date,Type
+VULN-001,SQL Injection,user-service,High,fix_accepted,2025-01-10,2025-01-15,2025-01-15,Web
+VULN-001,Outdated lodash dependency,user-service,High,fix_accepted,2025-01-10,2025-01-15,2025-01-15,Web
+VULN-002,Outdated lodash dependency,order-service,Medium,awaiting_validation,2025-02-03,2025-02-20,2025-02-18,SCA
+VULN-003,Hardcoded credentials,legacy-auth,High,identified,2024-11-12,2025-01-05,2024-11-12,SAST
