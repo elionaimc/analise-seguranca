@@ -10,12 +10,12 @@ Implementada em Node.js e TypeScript, o script processa dados de **vulnerabilida
 
 ![Dados de Exemplo](./img/exemplo-dados.png)
 
-## Como Instalar e Rodar
+## Como instalar e usar
 
 ### 1. Pré-requisitos
 Certifique-se de ter o Node.js instalado (versão 18 ou superior).
 
-### 2. Preparação do Ambiente
+### 2. Preparação do ambiente
 Abra o terminal na pasta do projeto e execute:
 
 ```bash
@@ -34,7 +34,7 @@ ANALYSIS_YEAR="2025"
 ```
 
 ### 4. Execução
-Para gerar o dashboard de métricas, insira o comando abaixo terminal:
+Para gerar o dashboard de métricas, insira o comando abaixo no terminal:
 
 ```bash
 # Executar script
@@ -58,7 +58,7 @@ interface VulnerabilityRow {
 }
 ```
 
-## Entendendo as Métricas
+## Entendendo as métricas
 
 O script processa os dados excluindo automaticamente os *falsos positivos* para garantir que a análise reflita apenas o risco real.
 
